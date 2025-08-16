@@ -1,70 +1,105 @@
-# Getting Started with Create React App
+# VDShop Frontend - HomePage
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Đây là trang chủ của ứng dụng VDShop, một trang web bán laptop và phụ kiện công nghệ.
 
-## Available Scripts
+## Tính năng
 
-In the project directory, you can run:
+### 🏠 Hero Section
+- Tiêu đề chính với gradient màu xanh
+- Mô tả về dịch vụ
+- Nút "Khám phá ngay" và "Liên hệ tư vấn"
+- Hình ảnh hero với badge đánh giá
 
-### `npm start`
+### 📱 Categories Section
+- Hiển thị 4 danh mục chính: Laptop, Phụ kiện, Màn hình, Audio
+- Mỗi danh mục có icon, tên và số lượng sản phẩm
+- Hover effect với animation
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### ⭐ Featured Products
+- Hiển thị sản phẩm nổi bật
+- Sử dụng component ProductCard
+- Grid responsive từ 1-4 cột tùy theo kích thước màn hình
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### ✨ Features Section
+- 4 tính năng nổi bật: Giao hàng miễn phí, Bảo hành chính hãng, Hỗ trợ 24/7, Chất lượng đảm bảo
+- Icon và mô tả cho mỗi tính năng
 
-### `npm test`
+### 📧 Newsletter Section
+- Form đăng ký nhận tin khuyến mãi
+- Background tối với text trắng
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Cấu trúc thư mục
 
-### `npm run build`
+```
+src/
+├── components/
+│   ├── HomePage.tsx          # Component chính của trang chủ
+│   └── ProductCard.tsx       # Component hiển thị sản phẩm
+├── data/
+│   └── mockData.ts           # Dữ liệu mẫu sản phẩm
+├── types/
+│   └── index.ts              # Định nghĩa TypeScript interfaces
+├── App.tsx                   # Component chính của ứng dụng
+└── index.css                 # CSS tùy chỉnh với responsive design
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Cài đặt và chạy
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1. Cài đặt dependencies:
+```bash
+npm install
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+2. Chạy ứng dụng:
+```bash
+npm start
+```
 
-### `npm run eject`
+3. Mở trình duyệt và truy cập: `http://localhost:3000`
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Dependencies
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- **React**: Framework chính
+- **TypeScript**: Ngôn ngữ lập trình
+- **Lucide React**: Icon library
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Props của HomePage
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```typescript
+interface HomePageProps {
+  onNavigate: (page: string) => void;      // Callback khi navigate
+  onViewProduct: (product: Product) => void; // Callback khi xem sản phẩm
+}
+```
 
-## Learn More
+## Styling
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Ứng dụng sử dụng **CSS thuần** với:
+- CSS Grid và Flexbox cho layout
+- CSS transitions và transforms cho animations
+- Media queries cho responsive design
+- CSS custom properties cho màu sắc và spacing
+- Hover effects và interactive elements
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Responsive Design
 
-### Code Splitting
+- **Mobile**: 1 cột cho sản phẩm, 2 cột cho danh mục
+- **Tablet**: 2 cột cho sản phẩm, 4 cột cho danh mục
+- **Desktop**: 3-4 cột cho sản phẩm, 4 cột cho danh mục
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Customization
 
-### Analyzing the Bundle Size
+Bạn có thể dễ dàng tùy chỉnh:
+- Màu sắc trong file `index.css`
+- Dữ liệu sản phẩm trong `mockData.ts`
+- Layout và styling trong các CSS classes
+- Icons từ Lucide React library
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## Tương lai
 
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Có thể mở rộng thêm:
+- Trang chi tiết sản phẩm
+- Trang danh sách sản phẩm
+- Trang giỏ hàng
+- Trang thanh toán
+- Trang quản lý tài khoản
