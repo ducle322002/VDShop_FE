@@ -1,18 +1,26 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { ArrowLeft, User, ShoppingBag, CreditCard, Settings, LogOut } from 'lucide-react';
+import { ArrowLeft, User, ShoppingBag, CreditCard, Settings, LogOut, LucideIcon } from 'lucide-react';
 
-const DashboardPage = () => {
+interface DashboardItem {
+  icon: LucideIcon;
+  title: string;
+  description: string;
+  onClick: () => void;
+  color: string;
+}
+
+const DashboardPage: React.FC = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
 
-  const handleLogout = () => {
+  const handleLogout = (): void => {
     logout();
     navigate('/home');
   };
 
-  const dashboardItems = [
+  const dashboardItems: DashboardItem[] = [
     {
       icon: User,
       title: 'Hồ sơ cá nhân',
@@ -103,36 +111,30 @@ const DashboardPage = () => {
             <p className="text-sm text-gray-500">VND</p>
           </div>
           <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Điểm tích lũy</h3>
-            <p className="text-3xl font-bold text-purple-600">1,250</p>
-            <p className="text-sm text-gray-500">Điểm</p>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Sản phẩm yêu thích</h3>
+            <p className="text-3xl font-bold text-purple-600">8</p>
+            <p className="text-sm text-gray-500">Sản phẩm</p>
           </div>
         </div>
 
         {/* Recent Activity */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-          <h3 className="text-xl font-semibold text-gray-900 mb-4">Hoạt động gần đây</h3>
-          <div className="space-y-4">
-            <div className="flex items-center space-x-4 p-3 bg-gray-50 rounded-lg">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Hoạt động gần đây</h3>
+          <div className="space-y-3">
+            <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
               <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-              <div className="flex-1">
-                <p className="text-sm text-gray-900">Đặt hàng thành công</p>
-                <p className="text-xs text-gray-500">Laptop Dell XPS 13 - 2 giờ trước</p>
-              </div>
+              <span className="text-sm text-gray-600">Đặt hàng mới - Laptop Dell XPS 13</span>
+              <span className="text-xs text-gray-400 ml-auto">2 giờ trước</span>
             </div>
-            <div className="flex items-center space-x-4 p-3 bg-gray-50 rounded-lg">
+            <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
               <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-              <div className="flex-1">
-                <p className="text-sm text-gray-900">Cập nhật hồ sơ</p>
-                <p className="text-xs text-gray-500">Thay đổi số điện thoại - 1 ngày trước</p>
-              </div>
+              <span className="text-sm text-gray-600">Cập nhật thông tin cá nhân</span>
+              <span className="text-xs text-gray-400 ml-auto">1 ngày trước</span>
             </div>
-            <div className="flex items-center space-x-4 p-3 bg-gray-50 rounded-lg">
+            <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
               <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-              <div className="flex-1">
-                <p className="text-sm text-gray-900">Đăng nhập</p>
-                <p className="text-xs text-gray-500">Từ thiết bị mới - 2 ngày trước</p>
-              </div>
+              <span className="text-sm text-gray-600">Đánh giá sản phẩm - MacBook Pro</span>
+              <span className="text-xs text-gray-400 ml-auto">3 ngày trước</span>
             </div>
           </div>
         </div>
@@ -141,7 +143,7 @@ const DashboardPage = () => {
         <div className="mt-8 text-center">
           <button
             onClick={handleLogout}
-            className="inline-flex items-center px-6 py-3 border border-red-300 text-red-700 rounded-lg hover:bg-red-50 transition-colors"
+            className="inline-flex items-center px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
           >
             <LogOut className="h-5 w-5 mr-2" />
             Đăng xuất

@@ -3,18 +3,23 @@ import { useNavigate } from 'react-router-dom';
 import { X, Trash2, Plus, Minus, ShoppingCart } from 'lucide-react';
 import { useCart } from '../../contexts/CartContext';
 
-const CartSidebar = ({ isOpen, onClose }) => {
+interface CartSidebarProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
   const { cart, removeFromCart, updateQuantity, getTotalPrice, clearCart } = useCart();
 
-  const formatPrice = (price) => {
+  const formatPrice = (price: number): string => {
     return new Intl.NumberFormat('vi-VN', {
       style: 'currency',
       currency: 'VND'
     }).format(price);
   };
 
-  const handleCheckout = () => {
+  const handleCheckout = (): void => {
     navigate('/checkout');
     onClose();
   };
@@ -99,17 +104,16 @@ const CartSidebar = ({ isOpen, onClose }) => {
                 {formatPrice(getTotalPrice())}
               </span>
             </div>
-            
             <div className="flex space-x-3">
               <button
                 onClick={clearCart}
-                className="flex-1 py-3 px-4 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors"
+                className="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
               >
                 Xóa giỏ hàng
               </button>
               <button
                 onClick={handleCheckout}
-                className="flex-1 bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 transition-colors"
+                className="flex-1 px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
               >
                 Thanh toán
               </button>

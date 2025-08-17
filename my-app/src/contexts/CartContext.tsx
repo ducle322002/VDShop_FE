@@ -1,8 +1,19 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { Product, CartItem } from '../types';
 
-const CartContext = createContext();
+interface CartContextType {
+  cart: CartItem[];
+  addToCart: (product: Product, quantity?: number) => void;
+  removeFromCart: (productId: string) => void;
+  updateQuantity: (productId: string, quantity: number) => void;
+  clearCart: () => void;
+  getTotalItems: () => number;
+  getTotalPrice: () => number;
+}
 
-export const useCart = () => {
+const CartContext = createContext<CartContextType | undefined>(undefined);
+
+export const useCart = (): CartContextType => {
   const context = useContext(CartContext);
   if (!context) {
     throw new Error('useCart must be used within a CartProvider');
@@ -10,8 +21,12 @@ export const useCart = () => {
   return context;
 };
 
-export const CartProvider = ({ children }) => {
-  const [cart, setCart] = useState([]);
+interface CartProviderProps {
+  children: ReactNode;
+}
+
+export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
+  const [cart, setCart] = useState<CartItem[]>([]);
 
   useEffect(() => {
     // Load cart from localStorage
@@ -26,7 +41,7 @@ export const CartProvider = ({ children }) => {
     localStorage.setItem('cart', JSON.stringify(cart));
   }, [cart]);
 
-  const addToCart = (product, quantity = 1) => {
+  const addToCart = (product: Product, quantity: number = 1): void => {
     setCart(prevCart => {
       const existingItem = prevCart.find(item => item.id === product.id);
       
@@ -37,16 +52,22 @@ export const CartProvider = ({ children }) => {
             : item
         );
       } else {
-        return [...prevCart, { ...product, quantity }];
+        return [...prevCart, { 
+          id: product.id,
+          name: product.name,
+          price: product.price,
+          image: product.image,
+          quantity 
+        }];
       }
     });
   };
 
-  const removeFromCart = (productId) => {
+  const removeFromCart = (productId: string): void => {
     setCart(prevCart => prevCart.filter(item => item.id !== productId));
   };
 
-  const updateQuantity = (productId, quantity) => {
+  const updateQuantity = (productId: string, quantity: number): void => {
     if (quantity <= 0) {
       removeFromCart(productId);
       return;
@@ -61,19 +82,19 @@ export const CartProvider = ({ children }) => {
     );
   };
 
-  const clearCart = () => {
+  const clearCart = (): void => {
     setCart([]);
   };
 
-  const getTotalItems = () => {
+  const getTotalItems = (): number => {
     return cart.reduce((total, item) => total + item.quantity, 0);
   };
 
-  const getTotalPrice = () => {
+  const getTotalPrice = (): number => {
     return cart.reduce((total, item) => total + (item.price * item.quantity), 0);
   };
 
-  const value = {
+  const value: CartContextType = {
     cart,
     addToCart,
     removeFromCart,

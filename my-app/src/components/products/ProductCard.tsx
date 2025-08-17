@@ -1,18 +1,29 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Star, Eye } from 'lucide-react';
 import { Product } from '../../types';
 
 interface ProductCardProps {
   product: Product;
-  onViewDetails: (product: Product) => void;
+  onViewDetails?: (product: Product) => void;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, onViewDetails }) => {
+  const navigate = useNavigate();
+  
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('vi-VN', {
       style: 'currency',
       currency: 'VND'
     }).format(price);
+  };
+
+  const handleViewDetails = () => {
+    if (onViewDetails) {
+      onViewDetails(product);
+    } else {
+      navigate(`/product/${product.id}`);
+    }
   };
 
   return (
@@ -42,7 +53,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onViewDetails }) => 
         {/* View Details Button */}
         <div className="view-details-overlay">
           <button
-            onClick={() => onViewDetails(product)}
+            onClick={handleViewDetails}
             className="view-details-button"
           >
             <Eye size={16} />
@@ -98,7 +109,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onViewDetails }) => 
         
         {/* Action Button */}
         <button
-          onClick={() => onViewDetails(product)}
+          onClick={handleViewDetails}
           className={`product-button ${!product.inStock ? 'disabled' : ''}`}
           disabled={!product.inStock}
         >

@@ -3,11 +3,16 @@ import { useSearchParams } from 'react-router-dom';
 import { mockProducts } from '../../data/mockData';
 import { ProductCard } from '../products';
 import { useCart } from '../../contexts/CartContext';
+import { Product } from '../../types';
 
-const ProductsPage = ({ category }) => {
+interface ProductsPageProps {
+  category?: string;
+}
+
+const ProductsPage: React.FC<ProductsPageProps> = ({ category }) => {
   const [searchParams] = useSearchParams();
-  const [filteredProducts, setFilteredProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
   const { addToCart } = useCart();
 
   useEffect(() => {
@@ -33,12 +38,12 @@ const ProductsPage = ({ category }) => {
     setLoading(false);
   }, [category, searchParams]);
 
-  const handleViewProduct = (product) => {
+  const handleViewProduct = (product: Product): void => {
     console.log('Viewing product:', product);
     // Here you can implement navigation to product detail page
   };
 
-  const handleAddToCart = (product) => {
+  const handleAddToCart = (product: Product): void => {
     addToCart(product, 1);
   };
 
@@ -53,7 +58,7 @@ const ProductsPage = ({ category }) => {
     );
   }
 
-  const getPageTitle = () => {
+  const getPageTitle = (): string => {
     if (category === 'laptop') return 'Laptop';
     if (category === 'accessory') return 'Phụ kiện';
     if (category === 'monitor') return 'Màn hình';
@@ -61,7 +66,7 @@ const ProductsPage = ({ category }) => {
     return 'Tất cả sản phẩm';
   };
 
-  const getPageDescription = () => {
+  const getPageDescription = (): string => {
     if (category === 'laptop') return 'Khám phá bộ sưu tập laptop chất lượng cao';
     if (category === 'accessory') return 'Phụ kiện công nghệ đa dạng, chất lượng';
     if (category === 'monitor') return 'Màn hình gaming và công việc chuyên nghiệp';
@@ -98,39 +103,23 @@ const ProductsPage = ({ category }) => {
                 />
                 <button
                   onClick={() => handleAddToCart(product)}
-                  className="absolute bottom-4 right-4 bg-blue-600 text-white p-2 rounded-full shadow-lg hover:bg-blue-700 transition-colors"
-                  title="Thêm vào giỏ hàng"
+                  className="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-11/12 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors opacity-0 group-hover:opacity-100"
                 >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                  </svg>
+                  Thêm vào giỏ
                 </button>
               </div>
             ))}
           </div>
         ) : (
-          <div className="text-center py-16">
-            <div className="text-gray-400 mb-4">
-              <svg className="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-            </div>
-            <h3 className="text-xl font-medium text-gray-900 mb-2">
-              Không tìm thấy sản phẩm
-            </h3>
-            <p className="text-gray-600">
+          <div className="text-center py-12">
+            <div className="text-gray-400 text-6xl mb-4">🔍</div>
+            <h3 className="text-xl font-medium text-gray-900 mb-2">Không tìm thấy sản phẩm</h3>
+            <p className="text-gray-500">
               {searchParams.get('search') 
                 ? `Không có sản phẩm nào phù hợp với "${searchParams.get('search')}"`
                 : 'Không có sản phẩm nào trong danh mục này'
               }
             </p>
-          </div>
-        )}
-
-        {/* Results Count */}
-        {filteredProducts.length > 0 && (
-          <div className="text-center mt-12 text-gray-600">
-            Hiển thị {filteredProducts.length} sản phẩm
           </div>
         )}
       </div>

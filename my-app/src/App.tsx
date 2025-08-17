@@ -7,13 +7,13 @@ import {
   LoginPage, 
   DashboardPage, 
   ProfilePage, 
-  OrdersPage 
-} from './components';
+  OrdersPage,
+  ProductDetailPage
+} from './components/index.js';
 import { AuthProvider } from './contexts/AuthContext';
 import { CartProvider } from './contexts/CartContext';
 
-function App() {
-
+const App: React.FC = () => {
   return (
     <Router>
       <AuthProvider>
@@ -26,6 +26,7 @@ function App() {
               <Route path="/products" element={<ProductsPage />} />
               <Route path="/laptops" element={<ProductsPage category="laptop" />} />
               <Route path="/accessories" element={<ProductsPage category="accessory" />} />
+              <Route path="/product/:productId" element={<ProductDetailPage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/dashboard" element={<DashboardPage />} />
               <Route path="/profile" element={<ProfilePage />} />
@@ -37,6 +38,6 @@ function App() {
       </AuthProvider>
     </Router>
   );
-}
+};
 
 export default App;
