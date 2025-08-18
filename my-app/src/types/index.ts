@@ -29,10 +29,12 @@ export interface Feature {
 
 export interface User {
   id: string;
-  name: string;
+  username: string;
+  firstName: string;
+  lastName: string;
   email: string;
   role: string;
-  token: string;
+  token?: string;
 }
 
 export interface CartItem {

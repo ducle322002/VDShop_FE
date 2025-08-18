@@ -64,7 +64,7 @@ const DashboardPage: React.FC = () => {
             Về trang chủ
           </button>
           <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-          <p className="text-gray-600 mt-2">Chào mừng trở lại, {user?.name}!</p>
+          <p className="text-gray-600 mt-2">Chào mừng trở lại, {user?.firstName || user?.username}!</p>
         </div>
 
         {/* User Info Card */}
@@ -74,7 +74,7 @@ const DashboardPage: React.FC = () => {
               <User className="h-8 w-8 text-blue-600" />
             </div>
             <div>
-              <h2 className="text-xl font-semibold text-gray-900">{user?.name}</h2>
+              <h2 className="text-xl font-semibold text-gray-900">{user?.firstName || user?.username}</h2>
               <p className="text-gray-600">{user?.email}</p>
               <p className="text-sm text-gray-500 capitalize">Vai trò: {user?.role}</p>
             </div>

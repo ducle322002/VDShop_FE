@@ -1,8 +1,27 @@
-import api from './api';
+import axios from 'axios';
 import { User, LoginCredentials } from '../features/auth';
+
+// Create axios instance directly if import fails
+const api = axios.create({
+  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:8080/api',
+  timeout: 10000,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
 
 class AuthService {
   private readonly baseUrl = '/auth';
+
+  constructor() {
+    // Debug: log api object to see what we're importing
+    // eslint-disable-next-line no-console
+    console.log('[AuthService] API object:', api);
+    // eslint-disable-next-line no-console
+    console.log('[AuthService] API methods:', Object.getOwnPropertyNames(api));
+    // eslint-disable-next-line no-console
+    console.log('[AuthService] API.post exists:', typeof api.post);
+  }
 
   async login(credentials: LoginCredentials): Promise<{ user: User; token: string }> {
     try {
@@ -13,12 +32,19 @@ class AuthService {
     }
   }
 
-  async register(userData: Partial<User> & { password: string }): Promise<{ user: User; token: string }> {
+  async register(userData: { username: string; firstName: string; lastName: string; email: string; password: string }): Promise<{ user: User; token: string }> {
     try {
       const response = await api.post(`${this.baseUrl}/register`, userData);
       return response.data;
     } catch (error) {
-      throw new Error('Đăng ký thất bại');
+      // Log detailed error for debugging
+      console.error('[AuthService] Registration error details:', error);
+      console.error('[AuthService] Error response:', error?.response);
+      console.error('[AuthService] Error status:', error?.response?.status);
+      console.error('[AuthService] Error data:', error?.response?.data);
+      
+      // Re-throw the original error to preserve details
+      throw error;
     }
   }
 

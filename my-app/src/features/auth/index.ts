@@ -7,8 +7,10 @@ export { default as ProfilePage } from './ProfilePage';
 // Auth Types
 export interface User {
   id: string;
+  username: string;
+  firstName: string;
+  lastName: string;
   email: string;
-  name: string;
   role: 'user' | 'admin';
   avatar?: string;
 }

@@ -64,7 +64,7 @@ const LoginPage = () => {
             Đăng nhập
           </h2>
           <p className="mt-2 text-sm text-gray-600">
-            Đăng nhập để truy cập tài khoản của bạn
+            Đăng nhập bằng tên đăng nhập hoặc email
           </p>
         </div>
 
@@ -77,17 +77,17 @@ const LoginPage = () => {
           )}
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700">Email</label>
+            <label className="text-sm font-medium text-gray-700">Tên đăng nhập</label>
             <div className="relative">
               <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
               <input
-                type="email"
+                type="text"
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
                 required
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Nhập email của bạn"
+                placeholder="Nhập tên đăng nhập hoặc email"
               />
             </div>
           </div>
@@ -149,7 +149,7 @@ const LoginPage = () => {
 
         {/* Demo Credentials */}
         <div className="p-4 bg-blue-50 rounded-lg text-center text-sm text-blue-700 border border-blue-200">
-          <p className="text-blue-600">Email: <strong>minhndfs1484@gmail.com</strong></p>
+          <p className="text-blue-600">Username/Email: <strong>minhndfs1484@gmail.com</strong></p>
           <p className="text-blue-600">Password: <strong>12345678</strong></p>
           <p className="text-xs text-blue-500 mt-2">API: POST /api/auth/login</p>
         </div>

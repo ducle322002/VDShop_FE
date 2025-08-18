@@ -102,7 +102,7 @@ const Header: React.FC = () => {
                 <div className="relative group">
                   <button className="flex items-center space-x-2 p-2 text-gray-700 hover:text-blue-600 transition-colors">
                     <User className="h-6 w-6" />
-                    <span className="hidden md:inline">{user.name}</span>
+                    <span className="hidden md:inline">{user.lastName}</span>
                   </button>
                   <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
                     <div className="py-2">

@@ -1,10 +1,19 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { User } from '../types';
-import { apiService } from '../services/api';
+import axios from 'axios';
+
+// Create axios instance directly
+const api = axios.create({
+  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:8080/api',
+  timeout: 10000,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
 
 interface AuthContextType {
   user: User | null;
-  login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  login: (username: string, password: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => void;
   register: (name: string, email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   loading: boolean;
@@ -39,9 +48,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setLoading(false);
   }, []);
 
+
   const testConnection = async (): Promise<boolean> => {
     try {
-      await apiService.testConnection();
+      // Test connection by making a simple GET request
+      await api.get('/health');
       return true;
     } catch (error) {
       console.error('Backend connection test failed:', error);
@@ -53,14 +64,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       console.log('Attempting login with:', { email, password });
       
-      const data = await apiService.login(email, password);
+      const response = await api.post('/auth/login', { email, password });
+      const data = response.data;
       console.log('Login response:', data);
 
       if (data.success) {
         const userData: User = {
           id: data.data.userId,
-          name: data.data.username,
-          email: data.data.username,
+          username: data.data.username,
+          firstName: data.data.firstName || data.data.username,
+          lastName: data.data.lastName || '',
+          email: data.data.email || data.data.username,
           role: data.data.roles?.[0] || 'user',
           token: data.data.token
         };

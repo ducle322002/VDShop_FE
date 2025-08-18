@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Eye, EyeOff, User, Mail, Lock, Check } from 'lucide-react';
+import authService from '../../services/authService';
 
 interface RegisterFormData {
+  username: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -12,6 +14,7 @@ interface RegisterFormData {
 }
 
 interface RegisterFormErrors {
+  username?: string;
   firstName?: string;
   lastName?: string;
   email?: string;
@@ -25,6 +28,7 @@ const RegisterPage: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState<RegisterFormData>({
+    username: '',
     firstName: '',
     lastName: '',
     email: '',
@@ -54,6 +58,18 @@ const RegisterPage: React.FC = () => {
   const validateForm = (): boolean => {
     const newErrors: RegisterFormErrors = {};
 
+    // Debug: log current form data
+    // eslint-disable-next-line no-console
+    console.log('[Register] Validating form data:', formData);
+
+    if (!formData.username.trim()) {
+      newErrors.username = 'Vui lòng nhập tên đăng nhập';
+    } else if (formData.username.length < 3) {
+      newErrors.username = 'Tên đăng nhập phải có ít nhất 3 ký tự';
+    } else if (!/^[a-zA-Z0-9_]+$/.test(formData.username)) {
+      newErrors.username = 'Tên đăng nhập chỉ được chứa chữ cái, số và dấu gạch dưới';
+    }
+
     if (!formData.firstName.trim()) {
       newErrors.firstName = 'Vui lòng nhập tên';
     }
@@ -70,8 +86,16 @@ const RegisterPage: React.FC = () => {
 
     if (!formData.password) {
       newErrors.password = 'Vui lòng nhập mật khẩu';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Mật khẩu phải có ít nhất 6 ký tự';
+    } else if (formData.password.length < 8 || formData.password.length > 32) {
+      newErrors.password = 'Mật khẩu phải có từ 8-32 ký tự';
+    } else if (!/(?=.*[a-z])/.test(formData.password)) {
+      newErrors.password = 'Mật khẩu phải có ít nhất 1 chữ thường';
+    } else if (!/(?=.*[A-Z])/.test(formData.password)) {
+      newErrors.password = 'Mật khẩu phải có ít nhất 1 chữ viết hoa';
+    } else if (!/(?=.*\d)/.test(formData.password)) {
+      newErrors.password = 'Mật khẩu phải có ít nhất 1 số';
+    } else if (!/(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])/.test(formData.password)) {
+      newErrors.password = 'Mật khẩu phải có ít nhất 1 ký tự đặc biệt';
     }
 
     if (!formData.confirmPassword) {
@@ -84,6 +108,10 @@ const RegisterPage: React.FC = () => {
       newErrors.acceptTerms = 'Vui lòng đồng ý với điều khoản sử dụng';
     }
 
+    // Debug: log validation errors
+    // eslint-disable-next-line no-console
+    console.log('[Register] Validation errors:', newErrors);
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -92,25 +120,49 @@ const RegisterPage: React.FC = () => {
     e.preventDefault();
     
     if (!validateForm()) {
+      // Debug: form did not pass validation, API will not be called
+      // eslint-disable-next-line no-console
+      console.log('[Register] Validation failed, not calling API');
       return;
     }
 
     setIsLoading(true);
     
     try {
-      // TODO: Implement actual registration API call
-      console.log('Registration data:', formData);
+      // Prepare data for API call
+      const registerData = {
+        username: formData.username,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        password: formData.password
+      };
+
+      console.log('Calling registration API with data:', registerData);
       
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Call actual registration API
+      const response = await authService.register(registerData);
+      
+      console.log('Registration successful:', response);
       
       // Redirect to login page after successful registration
       navigate('/login', { 
         state: { message: 'Đăng ký thành công! Vui lòng đăng nhập.' }
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Registration error:', error);
-      setErrors({ email: 'Có lỗi xảy ra. Vui lòng thử lại.' });
+      
+      // Handle different types of errors
+      if (error.response?.data?.message) {
+        // Server error message
+        setErrors({ email: error.response.data.message });
+      } else if (error.message) {
+        // Service error message
+        setErrors({ email: error.message });
+      } else {
+        // Generic error
+        setErrors({ email: 'Có lỗi xảy ra. Vui lòng thử lại.' });
+      }
     } finally {
       setIsLoading(false);
     }
@@ -137,7 +189,34 @@ const RegisterPage: React.FC = () => {
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow-xl rounded-xl sm:px-10">
-          <form className="space-y-6" onSubmit={handleSubmit}>
+          <form className="space-y-6" noValidate onSubmit={handleSubmit}>
+            {/* Username Field */}
+            <div>
+              <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-2">
+                Tên đăng nhập
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <User className="h-5 w-5 text-gray-400" />
+                </div>
+                <input
+                  id="username"
+                  name="username"
+                  type="text"
+                  required
+                  value={formData.username}
+                  onChange={handleInputChange}
+                  className={`block w-full pl-10 pr-3 py-2 border rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
+                    errors.username ? 'border-red-300' : 'border-gray-300'
+                  }`}
+                  placeholder="Nhập tên đăng nhập"
+                />
+              </div>
+              {errors.username && (
+                <p className="mt-1 text-sm text-red-600">{errors.username}</p>
+              )}
+            </div>
+
             {/* Name Fields */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
@@ -258,6 +337,26 @@ const RegisterPage: React.FC = () => {
               {errors.password && (
                 <p className="mt-1 text-sm text-red-600">{errors.password}</p>
               )}
+              <div className="mt-2 text-xs text-gray-500">
+                <p>Mật khẩu phải có:</p>
+                <ul className="list-disc list-inside space-y-1 mt-1">
+                  <li className={formData.password.length >= 8 && formData.password.length <= 32 ? 'text-green-600' : ''}>
+                    Từ 8-32 ký tự
+                  </li>
+                  <li className={/(?=.*[a-z])/.test(formData.password) ? 'text-green-600' : ''}>
+                    Ít nhất 1 chữ thường
+                  </li>
+                  <li className={/(?=.*[A-Z])/.test(formData.password) ? 'text-green-600' : ''}>
+                    Ít nhất 1 chữ viết hoa
+                  </li>
+                  <li className={/(?=.*\d)/.test(formData.password) ? 'text-green-600' : ''}>
+                    Ít nhất 1 số
+                  </li>
+                  <li className={/(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])/.test(formData.password) ? 'text-green-600' : ''}>
+                    Ít nhất 1 ký tự đặc biệt
+                  </li>
+                </ul>
+              </div>
             </div>
 
             {/* Confirm Password Field */}
