@@ -3,8 +3,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { ShoppingCart, User, Search, Menu, X, Laptop, Headphones, LucideIcon } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useCart } from '../../contexts/CartContext';
-import { LoginModal } from '../auth';
-import { CartSidebar } from '../cart/index.js';
+import { LoginModal } from '../../features/auth';
+import { CartSidebar } from '../../features/cart';
 
 interface NavItem {
   id: string;
@@ -135,13 +135,21 @@ const Header: React.FC = () => {
                   </div>
                 </div>
               ) : (
-                <button
-                  onClick={() => setIsLoginModalOpen(true)}
-                  className="flex items-center space-x-2 p-2 text-gray-700 hover:text-blue-600 transition-colors"
-                >
-                  <User className="h-6 w-6" />
-                  <span className="hidden md:inline">Đăng nhập</span>
-                </button>
+                <div className="flex items-center space-x-2">
+                  <button
+                    onClick={() => navigate('/register')}
+                    className="flex items-center space-x-2 px-3 py-2 text-gray-700 hover:text-blue-600 transition-colors"
+                  >
+                    <span className="hidden md:inline">Đăng ký</span>
+                  </button>
+                  <button
+                    onClick={() => setIsLoginModalOpen(true)}
+                    className="flex items-center space-x-2 p-2 text-gray-700 hover:text-blue-600 transition-colors"
+                  >
+                    <User className="h-6 w-6" />
+                    <span className="hidden md:inline">Đăng nhập</span>
+                  </button>
+                </div>
               )}
 
               {/* Mobile Menu Button */}

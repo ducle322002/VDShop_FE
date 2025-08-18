@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, Star, Truck, Shield, Headphones, Laptop2, Mouse, Monitor } from 'lucide-react';
 import { mockProducts } from '../../data/mockData';
-import { ProductCard } from '../products';
+import { ProductCard } from '../../features/products';
 // Product interface is used implicitly in the component
 
 const HomePage = () => {
@@ -99,7 +99,7 @@ const HomePage = () => {
             </p>
           </div>
 
-          <div className="categories-grid">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {categories.map((category) => (
                               <button
                   key={category.id}
@@ -137,12 +137,11 @@ const HomePage = () => {
             </button>
           </div>
 
-          <div className="products-grid">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {featuredProducts.map((product) => (
               <ProductCard
                 key={product.id}
                 product={product}
-                onViewDetails={(product) => console.log('Viewing product:', product)}
               />
             ))}
           </div>

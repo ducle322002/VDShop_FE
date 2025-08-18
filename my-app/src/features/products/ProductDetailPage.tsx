@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Star } from 'lucide-react';
 import { mockProducts } from '../../data/mockData';
 import { Product } from '../../types';
-import ProductDetail from '../products/ProductDetail';
+import ProductDetail from './ProductDetail';
 
 const ProductDetailPage: React.FC = () => {
   const { productId } = useParams<{ productId: string }>();

@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, Mail, Lock, Eye, EyeOff, ArrowLeft } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 
 const LoginPage = () => {
-  const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
-    name: '',
     email: '',
     password: ''
   });
@@ -15,7 +13,7 @@ const LoginPage = () => {
   const [loading, setLoading] = useState(false);
   
   const navigate = useNavigate();
-  const { login, register } = useAuth();
+  const { login } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,12 +21,7 @@ const LoginPage = () => {
     setLoading(true);
 
     try {
-      let result;
-      if (isLogin) {
-        result = await login(formData.email, formData.password);
-      } else {
-        result = await register(formData.name, formData.email, formData.password);
-      }
+      const result = await login(formData.email, formData.password);
 
       if (result.success) {
         navigate('/home');
@@ -49,11 +42,7 @@ const LoginPage = () => {
     });
   };
 
-  const toggleMode = () => {
-    setIsLogin(!isLogin);
-    setError('');
-    setFormData({ name: '', email: '', password: '' });
-  };
+
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -72,13 +61,10 @@ const LoginPage = () => {
         {/* Header */}
         <div className="text-center">
           <h2 className="text-3xl font-bold text-gray-900">
-            {isLogin ? 'Đăng nhập' : 'Đăng ký'}
+            Đăng nhập
           </h2>
           <p className="mt-2 text-sm text-gray-600">
-            {isLogin 
-              ? 'Đăng nhập để truy cập tài khoản của bạn'
-              : 'Tạo tài khoản mới để bắt đầu mua sắm'
-            }
+            Đăng nhập để truy cập tài khoản của bạn
           </p>
         </div>
 
@@ -87,24 +73,6 @@ const LoginPage = () => {
           {error && (
             <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm">
               {error}
-            </div>
-          )}
-
-          {!isLogin && (
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700">Họ tên</label>
-              <div className="relative">
-                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="Nhập họ tên của bạn"
-                />
-              </div>
             </div>
           )}
 
@@ -134,7 +102,7 @@ const LoginPage = () => {
                 value={formData.password}
                 onChange={handleInputChange}
                 required
-                className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full pl-12 pr-12 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="Nhập mật khẩu của bạn"
               />
               <button
@@ -147,46 +115,50 @@ const LoginPage = () => {
             </div>
           </div>
 
-          {isLogin && (
-            <div className="flex items-center justify-between">
-              <label className="flex items-center space-x-2">
-                <input type="checkbox" className="rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
-                <span className="text-sm text-gray-600">Ghi nhớ đăng nhập</span>
-              </label>
-              <button type="button" className="text-sm text-blue-600 hover:text-blue-700">
-                Quên mật khẩu?
-              </button>
-            </div>
-          )}
+          <div className="flex items-center justify-between">
+            <label className="flex items-center space-x-2">
+              <input type="checkbox" className="rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
+              <span className="text-sm text-gray-600">Ghi nhớ đăng nhập</span>
+            </label>
+            <button type="button" className="text-sm text-blue-600 hover:text-blue-700">
+              Quên mật khẩu?
+            </button>
+          </div>
 
           <button
             type="submit"
             disabled={loading}
             className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors disabled:bg-blue-400 disabled:cursor-not-allowed"
           >
-            {loading ? 'Đang xử lý...' : (isLogin ? 'Đăng nhập' : 'Đăng ký')}
+            {loading ? 'Đang xử lý...' : 'Đăng nhập'}
           </button>
         </form>
 
         {/* Footer */}
         <div className="text-center">
           <p className="text-gray-600">
-            {isLogin ? 'Chưa có tài khoản?' : 'Đã có tài khoản?'}
-            <button
-              onClick={toggleMode}
-              className="ml-2 text-blue-600 hover:text-blue-700 font-semibold"
+            Chưa có tài khoản?{' '}
+            <a
+              href="/register"
+              className="text-blue-600 hover:text-blue-700 font-semibold"
             >
-              {isLogin ? 'Đăng ký ngay' : 'Đăng nhập'}
-            </button>
+              Đăng ký ngay
+            </a>
           </p>
         </div>
 
         {/* Demo Credentials */}
-        {isLogin && (
-          <div className="p-4 bg-gray-50 rounded-lg text-center text-sm text-gray-500">
-            <p>Demo: admin@example.com / password</p>
-          </div>
-        )}
+        <div className="p-4 bg-blue-50 rounded-lg text-center text-sm text-blue-700 border border-blue-200">
+          <p className="text-blue-600">Email: <strong>minhndfs1484@gmail.com</strong></p>
+          <p className="text-blue-600">Password: <strong>12345678</strong></p>
+          <p className="text-xs text-blue-500 mt-2">API: POST /api/auth/login</p>
+        </div>
+
+        {/* API Status */}
+        <div className="p-3 bg-gray-50 rounded-lg text-center text-xs text-gray-500">
+          <p>🌐 Backend API: http://localhost:8080</p>
+          <p>📡 Endpoint: /api/auth/login</p>
+        </div>
       </div>
     </div>
   );

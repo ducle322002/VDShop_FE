@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { mockProducts } from '../../data/mockData';
-import { ProductCard } from '../products';
+import ProductCard from './ProductCard';
 import { useCart } from '../../contexts/CartContext';
 import { Product } from '../../types';
 
@@ -38,10 +38,7 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ category }) => {
     setLoading(false);
   }, [category, searchParams]);
 
-  const handleViewProduct = (product: Product): void => {
-    console.log('Viewing product:', product);
-    // Here you can implement navigation to product detail page
-  };
+
 
   const handleAddToCart = (product: Product): void => {
     addToCart(product, 1);
@@ -94,20 +91,13 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ category }) => {
 
         {/* Products Grid */}
         {filteredProducts.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {filteredProducts.map((product) => (
-              <div key={product.id} className="relative">
-                <ProductCard
-                  product={product}
-                  onViewDetails={handleViewProduct}
-                />
-                <button
-                  onClick={() => handleAddToCart(product)}
-                  className="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-11/12 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors opacity-0 group-hover:opacity-100"
-                >
-                  Thêm vào giỏ
-                </button>
-              </div>
+              <ProductCard
+                key={product.id}
+                product={product}
+                onAddToCart={handleAddToCart}
+              />
             ))}
           </div>
         ) : (
